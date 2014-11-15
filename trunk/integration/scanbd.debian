@@ -26,9 +26,8 @@
 # Required-Stop:     $local_fs $remote_fs
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
-# Short-Description: scanbd start script
-# Description:       This file should be used to construct scripts to be
-#                    placed in /etc/init.d.
+# Short-Description: Scanner button events daemon
+# Description:       scanbd associates actions to scanner buttons
 ### END INIT INFO
 
 # Do NOT "set -e"

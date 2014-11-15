@@ -23,7 +23,7 @@
 
 logger -t "scanbd: $0" "Begin of $SCANBD_ACTION for device $SCANBD_DEVICE"
 
-scanner=$(echo $SCANBD_DEVICE | cut -d ':' -f 1)
-scanadf -d $SCANBD_DEVICE -o /tmp/${scanner}_${SCANBD_FUNCTION_MODE}_${SCANBD_FUNCTION} 2>&1 
+scanner=$(echo "$SCANBD_DEVICE" | cut -d ':' -f 1)
+scanadf -d "$SCANBD_DEVICE" -o "/tmp/${scanner}_${SCANBD_FUNCTION_MODE}_${SCANBD_FUNCTION}" 2>&1
 
 logger -t "scanbd: $0" "End   of $SCANBD_ACTION for device $SCANBD_DEVICE"

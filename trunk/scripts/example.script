@@ -23,6 +23,6 @@
 
 logger -t "scanbd: $0" "Begin of $SCANBD_ACTION for device $SCANBD_DEVICE"
 
-scanimage -d $SCANBD_DEVICE  2>&1 > /tmp/scanner.test
+scanimage -d "$SCANBD_DEVICE"  2>&1 > /tmp/scanner.test
 
 logger -t "scanbd: $0" "End   of $SCANBD_ACTION for device $SCANBD_DEVICE"

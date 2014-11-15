@@ -26,6 +26,6 @@
 logger -t "scanbd: $0" "Begin of $SCANBD_ACTION for device $SCANBD_DEVICE"
 
 # printout all env-variables
-/usr/bin/printenv > /tmp/scanbd.script.env
+/usr/bin/printenv > `mktemp -t scanbd.script.env.XXXXXXXXXX`
 
 logger -t "scanbd: $0" "End   of $SCANBD_ACTION for device $SCANBD_DEVICE"
