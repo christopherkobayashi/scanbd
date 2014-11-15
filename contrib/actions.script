@@ -47,87 +47,87 @@ EMAIL="someone@example.org" # email address of receiver
 USER="user" # useful when saving scans in NFS shared directory
 GROUP="group" # useful when saving scans in NFS shared directory
 
-export MAGICK_TMPDIR=${TMPDIR} # Override default cache of convert command. Needed for systems with very small /tmp (e.g. ramdisk).
+export MAGICK_TMPDIR="${TMPDIR}" # Override default cache of convert command. Needed for systems with very small /tmp (e.g. ramdisk).
 
-case $SCANBD_ACTION in
+case "$SCANBD_ACTION" in
 
     scan)
 	STARTANEW=`find ${TMPDIR} -mindepth 1 -maxdepth 1 -name "${PAGEBASE}*.tif" -mmin -${TIMEOUT} 2> /dev/null | wc -l`
 
 	if [ "0${STARTANEW}" -eq 0 ]; then
-		scanimage -d $SCANBD_DEVICE \
+		scanimage -d "$SCANBD_DEVICE" \
 		--icc-profile=/usr/share/color/icc/sRGB.icm --format=tiff \
 		--mode=Color --depth=8 --resolution=300 \
-		> ${TMPDIR}${FILENAME}.tif
+		> "${TMPDIR}${FILENAME}.tif"
 
-		convert -rotate 180 ${TMPDIR}${FILENAME}.tif ${SCANDIR}${FILENAME}.jpg
-		chown ${USER}:${GROUP} ${SCANDIR}${FILENAME}.jpg
+		convert -rotate 180 "${TMPDIR}${FILENAME}.tif" "${SCANDIR}${FILENAME}.jpg"
+		chown "${USER}:${GROUP}" "${SCANDIR}${FILENAME}.jpg"
 
-		rm ${TMPDIR}${FILENAME}.tif
+		rm "${TMPDIR}${FILENAME}.tif"
 	else
-		NEXTPAGE=`expr 1 + \`ls -1 ${TMPDIR}${PAGEBASE}*.tif | wc -l\``
+		NEXTPAGE=`expr 1 + \`ls -1 "${TMPDIR}${PAGEBASE}"*.tif | wc -l\``
 
-		scanimage -d $SCANBD_DEVICE \
+		scanimage -d "$SCANBD_DEVICE" \
 		--icc-profile=/usr/share/color/icc/sRGB.icm --format=tiff \
 		--mode=Color --depth=8 --resolution=150 \
-		> ${TMPDIR}${PAGEBASE}`printf %.5d ${NEXTPAGE}`.tif
+		> "${TMPDIR}${PAGEBASE}`printf %.5d ${NEXTPAGE}`.tif"
 	fi
     ;;
 
     copy)
-	scanimage -d $SCANBD_DEVICE --format=tiff --mode=Gray --depth=8 \
+	scanimage -d "$SCANBD_DEVICE" --format=tiff --mode=Gray --depth=8 \
 	--resolution=300 \
 	| convert - -density 300 ps:- \
-	| lp -d ${PRINTER}
+	| lp -d "${PRINTER}"
     ;;
 
     email)
-	STARTANEW=`find ${TMPDIR} -mindepth 1 -maxdepth 1 -name "${PAGEBASE}*.tif" -mmin -${TIMEOUT} 2> /dev/null | wc -l`
+	STARTANEW=`find "${TMPDIR}" -mindepth 1 -maxdepth 1 -name "${PAGEBASE}*.tif" -mmin -${TIMEOUT} 2> /dev/null | wc -l`
 
 	if [ "0${STARTANEW}" -eq 0 ]; then
-		scanimage -d $SCANBD_DEVICE \
+		scanimage -d "$SCANBD_DEVICE" \
 		--icc-profile=/usr/share/color/icc/sRGB.icm --format=tiff \
 		--mode=Color --depth=8 --resolution=150 \
-		> ${TMPDIR}${FILENAME}.tif
+		> "${TMPDIR}${FILENAME}.tif"
 
-		convert -rotate 180 ${TMPDIR}${FILENAME}.tif ${TMPDIR}${FILENAME}.jpg
-		touch ${TMPDIR}${FILENAME}.txt
-		mpack -s "Scanned document ${FILENAME}" -d ${TMPDIR}${FILENAME}.txt \
-		-o ${TMPDIR}${FILENAME}.eml ${TMPDIR}${FILENAME}.jpg 
+		convert -rotate 180 "${TMPDIR}${FILENAME}.tif" "${TMPDIR}${FILENAME}.jpg"
+		touch "${TMPDIR}${FILENAME}.txt"
+		mpack -s "Scanned document ${FILENAME}" -d "${TMPDIR}${FILENAME}.txt" \
+		-o "${TMPDIR}${FILENAME}.eml" "${TMPDIR}${FILENAME}.jpg"
 
-		cat ${TMPDIR}${FILENAME}.eml | sendmail -v ${EMAIL}
+		cat "${TMPDIR}${FILENAME}.eml" | sendmail -v "${EMAIL}"
 
-		rm ${TMPDIR}${FILENAME}.tif ${TMPDIR}${FILENAME}.eml ${TMPDIR}${FILENAME}.jpg ${TMPDIR}${FILENAME}.txt
+		rm "${TMPDIR}${FILENAME}.tif" "${TMPDIR}${FILENAME}.eml" "${TMPDIR}${FILENAME}.jpg" "${TMPDIR}${FILENAME}.txt"
 	else
 		convert -rotate 180 -units PixelsPerInch -density 150 -compress jpeg \
-		${TMPDIR}${PAGEBASE}*.tif ${TMPDIR}${FILENAME}.pdf
+		"${TMPDIR}${PAGEBASE}"*.tif "${TMPDIR}${FILENAME}.pdf"
 
-		touch ${TMPDIR}${FILENAME}.txt
-		mpack -s "Scanned document ${FILENAME}" -d ${TMPDIR}${FILENAME}.txt \
-		-o ${TMPDIR}${FILENAME}.eml ${TMPDIR}${FILENAME}.pdf
+		touch "${TMPDIR}${FILENAME}.txt"
+		mpack -s "Scanned document ${FILENAME}" -d "${TMPDIR}${FILENAME}.txt" \
+		-o "${TMPDIR}${FILENAME}.eml" "${TMPDIR}${FILENAME}.pdf"
 
-		cat ${TMPDIR}${FILENAME}.eml | sendmail -v ${EMAIL}
+		cat "${TMPDIR}${FILENAME}.eml" | sendmail -v "${EMAIL}"
 
-		rm ${TMPDIR}${PAGEBASE}*.tif ${TMPDIR}${FILENAME}.eml ${TMPDIR}${FILENAME}.pdf ${TMPDIR}${FILENAME}.txt
+		rm "${TMPDIR}${PAGEBASE}"*.tif "${TMPDIR}${FILENAME}.eml" "${TMPDIR}${FILENAME}.pdf" "${TMPDIR}${FILENAME}.txt"
 	fi
     ;;
 
     file)
-	STARTANEW=`find ${TMPDIR} -mindepth 1 -maxdepth 1 -name "${PAGEBASE}*.tif" -mmin -${TIMEOUT} 2> /dev/null | wc -l`
+	STARTANEW=`find "${TMPDIR}" -mindepth 1 -maxdepth 1 -name "${PAGEBASE}*.tif" -mmin -${TIMEOUT} 2> /dev/null | wc -l`
 
 	if [ "0${STARTANEW}" -eq 0 ]; then
-		rm ${TMPDIR}${PAGEBASE}*.tif &> /dev/null
+		rm "${TMPDIR}${PAGEBASE}"*.tif &> /dev/null
 
-		scanimage -d $SCANBD_DEVICE \
+		scanimage -d "$SCANBD_DEVICE" \
 		--icc-profile=/usr/share/color/icc/sRGB.icm --format=tiff \
 		--mode=Color --depth=8 --resolution=150 \
-		> ${TMPDIR}${PAGEBASE}00001.tif
+		> "${TMPDIR}${PAGEBASE}00001.tif"
 	else
 		convert -rotate 180 -units PixelsPerInch -density 150 -compress jpeg \
-		${TMPDIR}${PAGEBASE}*.tif ${SCANDIR}${FILENAME}.pdf
-		chown ${USER}:${GROUP} ${SCANDIR}${FILENAME}.pdf
+		"${TMPDIR}${PAGEBASE}"*.tif "${SCANDIR}${FILENAME}.pdf"
+		chown "${USER}:${GROUP}" "${SCANDIR}${FILENAME}.pdf"
 
-		rm ${TMPDIR}${PAGEBASE}*.tif
+		rm "${TMPDIR}${PAGEBASE}"*.tif
 	fi
     ;;
 

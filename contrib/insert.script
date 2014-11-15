@@ -18,7 +18,6 @@
 logger="/usr/bin/logger"
 
 #$logger -t "scanbd: $0" "SCANBD_DEVICE=$SCANBD_DEVICE SCANBD_ACTION=$SCANBD_ACTION"
-$logger -t "scanbd: $0" "Loading firmware for $SCANBD_DEVICE"
-/usr/bin/scanimage -L 2>&1 | $logger -t "scanbd: $0"
-$logger -t "scanbd: $0" "Done loading firmware for $SCANBD_DEVICE"
-
+"$logger" -t "scanbd: $0" "Loading firmware for $SCANBD_DEVICE"
+/usr/bin/scanimage -L 2>&1 | "$logger" -t "scanbd: $0"
+"$logger" -t "scanbd: $0" "Done loading firmware for $SCANBD_DEVICE"
