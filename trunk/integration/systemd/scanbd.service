@@ -2,7 +2,7 @@
 #
 #  scanbd - KMUX scanner button daemon
 #
-#  Copyright (C) 2008 - 2013  Wilhelm Meier (wilhelm.meier@fh-kl.de)
+#  Copyright (C) 2008 - 2014  Wilhelm Meier (wilhelm.meier@fh-kl.de)
 #
 #  This program is free software; you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@ Description=Scanner button polling Service
 
 [Service]
 Type=simple
-ExecStart=/usr/sbin/scanbd -f
+ExecStart=/usr/sbin/scanbd -f -c /etc/scanbd/scanbd.conf
 #ExecReload=?
 Environment=SANE_CONFIG_DIR=/etc/scanbd
 StandardInput=null
