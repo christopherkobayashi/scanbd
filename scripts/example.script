@@ -4,7 +4,7 @@
 #
 #  scanbd - KMUX scanner button daemon
 #
-#  Copyright (C) 2008 - 2013  Wilhelm Meier (wilhelm.meier@fh-kl.de)
+#  Copyright (C) 2008 - 2014  Wilhelm Meier (wilhelm.meier@fh-kl.de)
 #
 #  This program is free software; you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -23,6 +23,6 @@
 
 logger -t "scanbd: $0" "Begin of $SCANBD_ACTION for device $SCANBD_DEVICE"
 
-scanimage -d "$SCANBD_DEVICE"  2>&1 > /tmp/scanner.test
+SANE_CONFIG_DIR=/etc/scanbd scanimage -d "$SCANBD_DEVICE"  2>&1 > /tmp/scanner.test
 
 logger -t "scanbd: $0" "End   of $SCANBD_ACTION for device $SCANBD_DEVICE"
