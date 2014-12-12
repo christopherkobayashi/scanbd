@@ -38,9 +38,6 @@ requests the scanbd daemon to release the scanner.
 Then it starts the real saned which scans and sends the data back
 to the requesting application. When the scanning is done and saned exits, the 
 scanbm daemon tells scanbd to resume polling the scanner.
-.PP   
-scanbd can be configured at compile time to either use sane to poll the scannner
-or use the scanbuttond backends to do so.
 .PP
 scanbd polls the scanner regularly (the interval can be set in 
 .B scanbd.conf
@@ -91,11 +88,6 @@ contains a detailed explantion of the configuration options.
 The 
 .B \-c
 option can be used to override the default configuration file.
-.PP
-scanbd shall normally be started from init using your operating
-system's start method. See the integration directory in the scanbd 
-sources to see what is available for your OS and
-distribution. 
 .SH "SEE ALSO"
 .BR scanbm (8),
 .BR sane (7),
