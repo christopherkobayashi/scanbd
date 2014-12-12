@@ -632,6 +632,12 @@ int main(int argc, char** argv) {
         dbus_init();
 
 #ifdef USE_SANE
+        if (getenv("SANE_CONFIG_DIR") != NULL) {
+            slog(SLOG_DEBUG, "SANE_CONFIG_DIR=%s", getenv("SANE_CONFIG_DIR"));
+        }
+        else {
+            slog(SLOG_WARN, "SANE_CONFIG_DIR not set");
+        }
         // Init SANE
         SANE_Int sane_version = 0;
         sane_init(&sane_version, 0);
