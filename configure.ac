@@ -68,7 +68,7 @@ AC_FUNC_FORK
 AC_FUNC_MALLOC
 AC_HEADER_STDBOOL
 
-OS_CFLAGS="-Wall -Wextra -std=c99 -g"
+OS_CFLAGS="-Wall -Wextra -std=c11 -g"
 
 dnl check for optional headers
 AC_CHECK_HEADERS(linux/limits.h \

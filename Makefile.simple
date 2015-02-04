@@ -2,7 +2,7 @@
 #
 #  scanbd - KMUX scanner button daemon
 #
-#  Copyright (C) 2008 - 2014  Wilhelm Meier (wilhelm.meier@fh-kl.de)
+#  Copyright (C) 2008 - 2015  Wilhelm Meier (wilhelm.meier@fh-kl.de)
 #
 #  This program is free software; you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -52,7 +52,7 @@ Makefile.conf: Makefile.conf.in
 		echo "Makefile.conf was outdated, it is saved as Makefile.conf.old, please copy your customizations over to the new Makefile.conf" ;\
 	fi; \
 	cp Makefile.conf.in Makefile.conf ; \
-	echo "A new Makefile.conf is generated, edit it first, then run gmake -f Makefile.simpe again" 
+	echo "A new Makefile.conf is generated, edit it first, then run gmake -f Makefile.simple again"
 
 scanbd:
 	$(MAKE) -f Makefile.simple -C src/scanbd all
