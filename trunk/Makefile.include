@@ -197,7 +197,7 @@ endif # USE_LIBUDEV
 # Define common options
 # ======================
 #
-CFLAGS   += -Wall -Wextra -std=c99 -g
+CFLAGS   += -Wall -Wextra -std=c11 -g
 LDLIBS  += -lconfuse -lpthread -ldbus-1
 CPPFLAGS += -DSCANBD_CFG_DIR=\"$(SCANBD_CFG_DIR)\" -DSCANBUTTOND_LIB_DIR=\"$(SCANBUTTOND_LIB_DIR)\" \
 	-DSANED_PATH=\"$(SANED_PATH)\"
