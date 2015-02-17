@@ -1045,6 +1045,17 @@ static void* sane_poll(void* arg) {
                     }
                     else { // child
                         slog(SLOG_DEBUG, "exec for %s", script_abs);
+                        if (access(script_abs, F_OK | X_OK) < 0) {
+                            slog(SLOG_ERROR, "access: %s", strerror(errno));
+                        }
+                        struct stat stat_buf;
+                        if (stat(script_abs, &stat_buf) < 0) {
+                            slog(SLOG_ERROR, "stat: %s", strerror(errno));
+                        }
+                        else {
+                            slog(SLOG_DEBUG, "octal mode for %s: %lo", script_abs, stat_buf.st_mode);
+                            slog(SLOG_DEBUG, "uid: %ld, gid: %ld", stat_buf.st_uid, stat_buf.st_gid);
+                        }
                         if (execle(script_abs, script_abs, NULL, env) < 0) {
                             slog(SLOG_ERROR, "execlp: %s", strerror(errno));
                         }
