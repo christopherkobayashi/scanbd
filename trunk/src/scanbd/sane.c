@@ -606,7 +606,8 @@ static void* sane_poll(void* arg) {
     sigfillset(&mask);
     pthread_sigmask(SIG_BLOCK, &mask, NULL);
     
-    static int si = 0;
+//    static int si = 0; // don't know why this was a static variable -> nonsense in the case of multiple sane_poll threads
+    int si = 0;
 
     // this thread uses the device and the san_thread_t datastructure
     // lock it
