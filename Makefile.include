@@ -44,8 +44,7 @@ my_path := $(shell dirname $(my_name))
 # ============================
 #
 PACKAGE = scanbd
-PACKAGE_VERSION = 1.92
-
+PACKAGE_VERSION = 1.4.3
 
 OSTYPE := $(shell uname)
 PKGCFG := $(shell which pkg-config)
@@ -201,6 +200,8 @@ CFLAGS   += -Wall -Wextra -std=c11 -g
 LDLIBS  += -lconfuse -lpthread -ldbus-1
 CPPFLAGS += -DSCANBD_CFG_DIR=\"$(SCANBD_CFG_DIR)\" -DSCANBUTTOND_LIB_DIR=\"$(SCANBUTTOND_LIB_DIR)\" \
 	-DSANED_PATH=\"$(SANED_PATH)\"
+
+# CC = clang
 
 # 
 # SCANBD_USER
