@@ -144,7 +144,6 @@ void cfg_do_parse(const char *config_file_name) {
         slog(SLOG_ERROR, "can't cd back to: %s", wd);
         exit(EXIT_FAILURE);
     }
-
 }
 
 char *make_script_path_abs(const char *script) {

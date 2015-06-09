@@ -24,7 +24,7 @@
 #include "slog.h"
 
 void daemonize(void) {
-    pid_t pid;
+    pid_t pid = -1;
 
     if ((pid = fork()) < 0) {
         slog(SLOG_ERROR, "fork: %s", strerror(errno));
@@ -46,7 +46,7 @@ void daemonize(void) {
         exit(EXIT_SUCCESS);
     }
     // Child-Child
-    int ofd;
+    int ofd = -1;
     if ((ofd = open("/dev/null", O_RDWR)) < 0) {
         slog(SLOG_ERROR, "open /dev/null: %s", strerror(errno));
         exit(EXIT_FAILURE);

@@ -34,7 +34,6 @@ static pthread_mutex_t dbus_mutex = PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP;
 static pthread_mutex_t dbus_mutex;
 #endif
 
-
 void dbus_send_signal_argv(const char* signal_name, char** argv) {
     // TODO: we need a better dbus mainloop integrations, so that we
     // can wakeup the main thread to sendout the messages we generate here
@@ -62,8 +61,8 @@ void dbus_send_signal_argv(const char* signal_name, char** argv) {
     }
 
     if (argv != NULL) {
-        DBusMessageIter args;
-        DBusMessageIter sub;
+        DBusMessageIter args = {};
+        DBusMessageIter sub = {};
         dbus_message_iter_init_append(signal, &args);
         if (dbus_message_iter_open_container(&args, DBUS_TYPE_ARRAY,
                                              DBUS_TYPE_STRING_AS_STRING,
@@ -83,7 +82,7 @@ void dbus_send_signal_argv(const char* signal_name, char** argv) {
     }
 
     slog(SLOG_DEBUG, "now sending signal %s", signal_name);
-    dbus_uint32_t serial;
+    dbus_uint32_t serial = 0;
     if (dbus_connection_send(conn, signal, &serial) != TRUE) {
         slog(SLOG_ERROR, "Can't send signal");
     }
@@ -119,7 +118,7 @@ void dbus_send_signal(const char* signal_name, const char* arg) {
     }
 
     if (arg != NULL) {
-        DBusMessageIter args;
+        DBusMessageIter args = {};
         dbus_message_iter_init_append(signal, &args);
         slog(SLOG_DEBUG, "append string %s to signal %s", arg, signal_name);
         if (dbus_message_iter_append_basic(&args, DBUS_TYPE_STRING, &arg) != TRUE) {
@@ -127,7 +126,7 @@ void dbus_send_signal(const char* signal_name, const char* arg) {
         }
     }
 
-    dbus_uint32_t serial;
+    dbus_uint32_t serial = 0;
     slog(SLOG_DEBUG, "now sending signal %s", signal_name);
     if (dbus_connection_send(conn, signal, &serial) != TRUE) {
         slog(SLOG_ERROR, "Can't send signal");
@@ -153,7 +152,7 @@ static void hook_device_ex(const char *param, const char *action_name, const cha
     // plus those 4:
     // PATH, PWD, USER, HOME
     // plus the sentinel
-    int number_of_envs = 4 + 2 + 1;
+    const int number_of_envs = 4 + 2 + 1;
     char** env = calloc(number_of_envs, sizeof(char*));
     for(int e = 0; e < number_of_envs; e += 1) {
         env[e] = calloc(NAME_MAX + 1, sizeof(char));
@@ -235,7 +234,7 @@ static void hook_device_ex(const char *param, const char *action_name, const cha
     char *script_abs = make_script_path_abs(script);
     assert(script_abs);
     if (strcmp(script_abs, SCANBD_NULL_STRING) != 0) {
-        pid_t cpid;
+        pid_t cpid = -1;
         if ((cpid = fork()) < 0) {
             slog(SLOG_ERROR, "Can't fork: %s", strerror(errno));
         }
@@ -524,7 +523,7 @@ void sane_trigger_action_async(int device, int action) {
 }
 
 static void dbus_method_trigger(DBusMessage *message) {
-    DBusMessageIter args;
+    DBusMessageIter args = {};
 
     dbus_uint32_t device = -1;
     dbus_uint32_t action = -1;
@@ -707,7 +706,7 @@ bool dbus_init(void) {
         return false;
     }
 #else
-    char match[PATH_MAX];
+    char match[PATH_MAX] = {};
     snprintf(match, PATH_MAX, "type='signal',interface='%s'", DBUS_HAL_INTERFACE);
     slog(SLOG_ERROR, "dbus match %s", match);
     dbus_bus_add_match(conn, match, &dbus_error);
@@ -817,7 +816,7 @@ void dbus_call_method(const char* method, const char* value) {
     assert(msg);
 
     if (value != NULL) {
-        DBusMessageIter args;
+        DBusMessageIter args = {};
         dbus_message_iter_init_append(msg, &args);
         if (dbus_message_iter_append_basic(&args, DBUS_TYPE_STRING, value) != TRUE) {
             slog(SLOG_ERROR, "Can't compose message");
@@ -853,7 +852,7 @@ void dbus_call_method(const char* method, const char* value) {
     }
     dbus_pending_call_unref(pending);
 
-    DBusMessageIter args;
+    DBusMessageIter args = {};
     if (!dbus_message_iter_init(reply, &args)) {
         slog(SLOG_INFO, "Reply has no arguments");
     }
@@ -887,7 +886,7 @@ void dbus_call_trigger(unsigned int device, unsigned int action) {
 
     dbus_uint32_t dev = device;
     dbus_uint32_t act = action;
-    DBusMessageIter args;
+    DBusMessageIter args = {};
     dbus_message_iter_init_append(msg, &args);
     if (dbus_message_iter_append_basic(&args, DBUS_TYPE_UINT32, &dev) != TRUE) {
         slog(SLOG_ERROR, "Can't compose message");

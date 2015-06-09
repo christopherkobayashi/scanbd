@@ -445,7 +445,7 @@ int main(int argc, char** argv) {
         }
         // start the real saned
         slog(SLOG_DEBUG, "forking subprocess for saned");
-        pid_t spid = 0;
+        pid_t spid = -1;
         if ((spid = fork()) < 0) {
             slog(SLOG_ERROR, "fork for saned subprocess failed: %s", strerror(errno));
             exit(EXIT_FAILURE);
@@ -569,7 +569,7 @@ int main(int argc, char** argv) {
 
         if (!scanbd_options.foreground) {
             // don't try to write pid-file if forgrounded
-            int pid_fd = 0;
+            int pid_fd = -1;
             if ((pid_fd = open(pidfile, O_RDWR | O_CREAT | O_EXCL,
                                S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH)) < 0) {
                 slog(SLOG_ERROR, "Can't create pidfile %s : %s", pidfile, strerror(errno));

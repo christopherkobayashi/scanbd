@@ -132,7 +132,7 @@ void get_sane_devices(void) {
         slog(SLOG_ERROR, "pthread_mutex_lock: %s", strerror(errno));
         return;
     }
-    SANE_Status sane_status = 0;
+    SANE_Status sane_status = SANE_STATUS_INVAL;
     sane_device_list = NULL;
     num_devices = 0;
     if ((sane_status = sane_get_devices(&sane_device_list, SANE_TRUE)) != SANE_STATUS_GOOD) {
@@ -194,7 +194,7 @@ static sane_opt_value_t get_sane_option_value(SANE_Handle* h, int index) {
     // handle h
     // if option can't be found or other catastrophy happens, the
     // value 0 gets returned
-    sane_opt_value_t res;
+    sane_opt_value_t res = {};
     sane_option_value_init(&res);
 
     const SANE_Option_Descriptor* odesc = NULL;
@@ -206,7 +206,7 @@ static sane_opt_value_t get_sane_option_value(SANE_Handle* h, int index) {
         unsigned long int value = 0;
         if ((unsigned int)odesc->size <= sizeof(long int)) {
             //if we can store it in an long int
-            SANE_Status status;
+            SANE_Status status = SANE_STATUS_INVAL;
             if ((status = sane_control_option(h, index, SANE_ACTION_GET_VALUE,
                                               &value, NULL)) != SANE_STATUS_GOOD) {
                 slog(SLOG_WARN, "Can't read value of %s: %s",
@@ -225,7 +225,7 @@ static sane_opt_value_t get_sane_option_value(SANE_Handle* h, int index) {
     else if (odesc->type == SANE_TYPE_STRING) {
         res.str_value.str = calloc(odesc->size + 1, sizeof(char));
         assert(res.str_value.str != NULL);
-        SANE_Status status;
+        SANE_Status status = SANE_STATUS_INVAL;
         if ((status = sane_control_option(h, index, SANE_ACTION_GET_VALUE,
                                           res.str_value.str, NULL)) != SANE_STATUS_GOOD) {
             slog(SLOG_WARN, "Can't read value of %s: %s", odesc->name, sane_strstatus(status));
@@ -619,7 +619,7 @@ static void* sane_poll(void* arg) {
     }
     
     // open the device this thread should poll
-    SANE_Status status = 0;
+    SANE_Status status = SANE_STATUS_INVAL;
     if ((status = sane_open(st->dev->name, &st->h)) != SANE_STATUS_GOOD) {
         slog(SLOG_ERROR, "Can't open device %s: %s", st->dev->name, sane_strstatus(status));
         slog(SLOG_WARN, "abandon polling of %s", st->dev->name);
