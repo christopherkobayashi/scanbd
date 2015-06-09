@@ -897,6 +897,7 @@ static void* sane_poll(void* arg) {
                         v = get_sane_option_value(st->h, st->functions[e].number);
                     }
                     else {
+                        slog(SLOG_DEBUG, "don't re-get the value");
                     }
                     if ((fdesc->type == SANE_TYPE_BOOL) || (fdesc->type == SANE_TYPE_INT) ||
                             (fdesc->type == SANE_TYPE_FIXED) || (odesc->type == SANE_TYPE_BUTTON)) {
