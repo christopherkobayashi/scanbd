@@ -620,6 +620,7 @@ int main(int argc, char** argv) {
         if (pwd != NULL) {
             slog(SLOG_DEBUG, "drop privileges to uid: %d", pwd->pw_uid);
             if (seteuid(pwd->pw_uid) < 0) {
+                setgroups(0, NULL);
                 slog(SLOG_WARN, "Can't set the effective uid to %d", pwd->pw_uid);
             }
             else {
