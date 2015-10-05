@@ -3,7 +3,7 @@
 #
 #  scanbd - KMUX scanner button daemon
 #
-#  Copyright (C) 2008 - 2015  Wilhelm Meier (wilhelm.meier@fh-kl.de)
+#  Copyright (C) 2008 - 2012  Wilhelm Meier (wilhelm.meier@fh-kl.de)
 #
 #  This program is free software; you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -44,7 +44,8 @@ my_path := $(shell dirname $(my_name))
 # ============================
 #
 PACKAGE = scanbd
-PACKAGE_VERSION = 1.4.3
+PACKAGE_VERSION = 1.92
+
 
 OSTYPE := $(shell uname)
 PKGCFG := $(shell which pkg-config)
@@ -196,12 +197,10 @@ endif # USE_LIBUDEV
 # Define common options
 # ======================
 #
-CFLAGS   += -Wall -Wextra -std=c11 -g
+CFLAGS   += -Wall -Wextra -std=c99 -g
 LDLIBS  += -lconfuse -lpthread -ldbus-1
 CPPFLAGS += -DSCANBD_CFG_DIR=\"$(SCANBD_CFG_DIR)\" -DSCANBUTTOND_LIB_DIR=\"$(SCANBUTTOND_LIB_DIR)\" \
 	-DSANED_PATH=\"$(SANED_PATH)\"
-
-# CC = clang
 
 # 
 # SCANBD_USER
