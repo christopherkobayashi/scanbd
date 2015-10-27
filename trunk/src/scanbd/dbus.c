@@ -136,14 +136,20 @@ void dbus_send_signal(const char* signal_name, const char* arg) {
 }
 
 static void hook_device_ex(const char *param, const char *action_name, const char *dev_name) {
+    assert(dev_name);
+    assert(param);
+    assert(action_name);
+
     cfg_t* cfg_sec_global = cfg_getsec(cfg, C_GLOBAL);
     assert(cfg_sec_global);
     const char* script = cfg_getstr(cfg_sec_global, param);
 
     if (!script || (strlen(script) == 0)) {
+        slog(SLOG_INFO, "No hook script for inserting device: %s", dev_name);
         //script = SCANBD_NULL_STRING;
         return; // No hook script, nothing for us to do here.
     }       
+    slog(SLOG_INFO, "Using hook script %s for inserting device: %s", script, dev_name);
 
     cfg_t* global_envs = cfg_getsec(cfg_sec_global, C_ENVIRONMENT);
     // number of env-vars =
@@ -233,6 +239,8 @@ static void hook_device_ex(const char *param, const char *action_name, const cha
 
     char *script_abs = make_script_path_abs(script);
     assert(script_abs);
+    slog(SLOG_DEBUG, "Hook script path: %s for inserting device: %s", script_abs, dev_name);
+
     if (strcmp(script_abs, SCANBD_NULL_STRING) != 0) {
         pid_t cpid = -1;
         if ((cpid = fork()) < 0) {
