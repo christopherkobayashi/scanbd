@@ -61,8 +61,13 @@ void dbus_send_signal_argv(const char* signal_name, char** argv) {
     }
 
     if (argv != NULL) {
+#if ((__GNUC__  - 0) < 5)
+        DBusMessageIter args;
+        DBusMessageIter sub;
+#else
         DBusMessageIter args = {};
         DBusMessageIter sub = {};
+#endif
         dbus_message_iter_init_append(signal, &args);
         if (dbus_message_iter_open_container(&args, DBUS_TYPE_ARRAY,
                                              DBUS_TYPE_STRING_AS_STRING,
@@ -118,7 +123,11 @@ void dbus_send_signal(const char* signal_name, const char* arg) {
     }
 
     if (arg != NULL) {
+#if ((__GNUC__  - 0) < 5)
+        DBusMessageIter args;
+#else
         DBusMessageIter args = {};
+#endif
         dbus_message_iter_init_append(signal, &args);
         slog(SLOG_DEBUG, "append string %s to signal %s", arg, signal_name);
         if (dbus_message_iter_append_basic(&args, DBUS_TYPE_STRING, &arg) != TRUE) {
@@ -531,7 +540,11 @@ void sane_trigger_action_async(int device, int action) {
 }
 
 static void dbus_method_trigger(DBusMessage *message) {
-    DBusMessageIter args = {};
+#if ((__GNUC__  - 0) < 5)
+        DBusMessageIter args;
+#else
+        DBusMessageIter args = {};
+#endif
 
     dbus_uint32_t device = -1;
     dbus_uint32_t action = -1;
@@ -824,7 +837,11 @@ void dbus_call_method(const char* method, const char* value) {
     assert(msg);
 
     if (value != NULL) {
+#if ((__GNUC__  - 0) < 5)
+        DBusMessageIter args;
+#else
         DBusMessageIter args = {};
+#endif
         dbus_message_iter_init_append(msg, &args);
         if (dbus_message_iter_append_basic(&args, DBUS_TYPE_STRING, value) != TRUE) {
             slog(SLOG_ERROR, "Can't compose message");
@@ -860,7 +877,11 @@ void dbus_call_method(const char* method, const char* value) {
     }
     dbus_pending_call_unref(pending);
 
-    DBusMessageIter args = {};
+#if ((__GNUC__  - 0) < 5)
+        DBusMessageIter args;
+#else
+        DBusMessageIter args = {};
+#endif
     if (!dbus_message_iter_init(reply, &args)) {
         slog(SLOG_INFO, "Reply has no arguments");
     }
@@ -894,7 +915,11 @@ void dbus_call_trigger(unsigned int device, unsigned int action) {
 
     dbus_uint32_t dev = device;
     dbus_uint32_t act = action;
-    DBusMessageIter args = {};
+#if ((__GNUC__  - 0) < 5)
+        DBusMessageIter args;
+#else
+        DBusMessageIter args = {};
+#endif
     dbus_message_iter_init_append(msg, &args);
     if (dbus_message_iter_append_basic(&args, DBUS_TYPE_UINT32, &dev) != TRUE) {
         slog(SLOG_ERROR, "Can't compose message");

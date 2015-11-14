@@ -194,7 +194,13 @@ static sane_opt_value_t get_sane_option_value(SANE_Handle* h, int index) {
     // handle h
     // if option can't be found or other catastrophy happens, the
     // value 0 gets returned
+
+#if ((__GNUC__  - 0) < 5)
+    sane_opt_value_t res;
+#else
     sane_opt_value_t res = {};
+#endif
+
     sane_option_value_init(&res);
 
     const SANE_Option_Descriptor* odesc = NULL;
