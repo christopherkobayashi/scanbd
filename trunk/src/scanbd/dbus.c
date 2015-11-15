@@ -61,7 +61,7 @@ void dbus_send_signal_argv(const char* signal_name, char** argv) {
     }
 
     if (argv != NULL) {
-#if ((__STDC_VERSION__  - 0) < 201112L)
+#if ((__STDC_VERSION__  - 0) < 201112L) || (((__GNUC__ - 0) < 5) && ((__GNUC_MINOR__ - 0) < 9))
         DBusMessageIter args;
         DBusMessageIter sub;
 #else
@@ -123,7 +123,7 @@ void dbus_send_signal(const char* signal_name, const char* arg) {
     }
 
     if (arg != NULL) {
-#if ((__STDC_VERSION__  - 0) < 201112L)
+#if ((__STDC_VERSION__  - 0) < 201112L) || (((__GNUC__ - 0) < 5) && ((__GNUC_MINOR__ - 0) < 9))
         DBusMessageIter args;
 #else
         DBusMessageIter args = {};
@@ -157,7 +157,7 @@ static void hook_device_ex(const char *param, const char *action_name, const cha
         slog(SLOG_INFO, "No hook script for inserting device: %s", dev_name);
         //script = SCANBD_NULL_STRING;
         return; // No hook script, nothing for us to do here.
-    }       
+    }
     slog(SLOG_INFO, "Using hook script %s for inserting device: %s", script, dev_name);
 
     cfg_t* global_envs = cfg_getsec(cfg_sec_global, C_ENVIRONMENT);
@@ -540,7 +540,7 @@ void sane_trigger_action_async(int device, int action) {
 }
 
 static void dbus_method_trigger(DBusMessage *message) {
-#if ((__STDC_VERSION__  - 0) < 201112L)
+#if ((__STDC_VERSION__  - 0) < 201112L) || (((__GNUC__ - 0) < 5) && ((__GNUC_MINOR__ - 0) < 9))
         DBusMessageIter args;
 #else
         DBusMessageIter args = {};
@@ -548,7 +548,7 @@ static void dbus_method_trigger(DBusMessage *message) {
 
     dbus_uint32_t device = -1;
     dbus_uint32_t action = -1;
-    
+
     if (!dbus_message_iter_init(message, &args)) {
         slog(SLOG_WARN, "trigger has no arguments");
         return;
@@ -586,7 +586,7 @@ static DBusHandlerResult message_func(DBusConnection *connection, DBusMessage *m
                                       void *user_data) {
     (void)connection;
     (void)user_data;
-    
+
     slog(SLOG_DEBUG, "message_func");
     DBusMessage* reply = NULL;
     if (dbus_message_is_method_call(message,
@@ -644,7 +644,7 @@ static void* dbus_thread(void* arg) {
     sigset_t mask;
     sigfillset(&mask);
     pthread_sigmask(SIG_BLOCK, &mask, NULL);
-    
+
     cfg_t* cfg_sec_global = NULL;
     cfg_sec_global = cfg_getsec(cfg, C_GLOBAL);
     assert(cfg_sec_global);
@@ -685,7 +685,7 @@ bool dbus_init(void) {
     if (!dbus_threads_init_default()) {
         slog(SLOG_ERROR, "DBus thread initialization failure");
     }
-    
+
     DBusError dbus_error;
     dbus_error_init(&dbus_error);
 
@@ -718,7 +718,7 @@ bool dbus_init(void) {
     }
 
     libhal_ctx_set_dbus_connection(hal_ctx, conn);
-    
+
     libhal_ctx_set_device_added(hal_ctx, hal_device_added);
     libhal_ctx_set_device_removed(hal_ctx, hal_device_removed);
 
@@ -754,14 +754,14 @@ void dbus_start_dbus_thread(void) {
         }
     }
     assert(conn);
-    
+
     if (!conn) {
         slog(SLOG_DEBUG, "No dbus connection");
         return;
     }
 
     DBusError dbus_error;
-    
+
     dbus_error_init(&dbus_error);
     if (dbus_connection_register_object_path(conn, SCANBD_DBUS_OBJECTPATH,
                                              &dbus_vtable, NULL) == FALSE) {
@@ -837,7 +837,7 @@ void dbus_call_method(const char* method, const char* value) {
     assert(msg);
 
     if (value != NULL) {
-#if ((__STDC_VERSION__  - 0) < 201112L)
+#if ((__STDC_VERSION__  - 0) < 201112L) || (((__GNUC__ - 0) < 5) && ((__GNUC_MINOR__ - 0) < 9))
         DBusMessageIter args;
 #else
         DBusMessageIter args = {};
@@ -848,7 +848,7 @@ void dbus_call_method(const char* method, const char* value) {
             return;
         }
     }
-    
+
     DBusPendingCall* pending = NULL;
 
     // send message and get a handle for a reply
@@ -877,7 +877,7 @@ void dbus_call_method(const char* method, const char* value) {
     }
     dbus_pending_call_unref(pending);
 
-#if ((__STDC_VERSION__  - 0) < 201112L)
+#if ((__STDC_VERSION__  - 0) < 201112L) || (((__GNUC__ - 0) < 5) && ((__GNUC_MINOR__ - 0) < 9))
         DBusMessageIter args;
 #else
         DBusMessageIter args = {};
@@ -885,7 +885,7 @@ void dbus_call_method(const char* method, const char* value) {
     if (!dbus_message_iter_init(reply, &args)) {
         slog(SLOG_INFO, "Reply has no arguments");
     }
-    
+
     return;
 }
 
@@ -915,7 +915,7 @@ void dbus_call_trigger(unsigned int device, unsigned int action) {
 
     dbus_uint32_t dev = device;
     dbus_uint32_t act = action;
-#if ((__STDC_VERSION__  - 0) < 201112L)
+#if ((__STDC_VERSION__  - 0) < 201112L) || (((__GNUC__ - 0) < 5) && ((__GNUC_MINOR__ - 0) < 9))
         DBusMessageIter args;
 #else
         DBusMessageIter args = {};
@@ -929,7 +929,7 @@ void dbus_call_trigger(unsigned int device, unsigned int action) {
         slog(SLOG_ERROR, "Can't compose message");
         return;
     }
-    
+
     DBusPendingCall* pending = NULL;
 
     // send message and get a handle for a reply
@@ -961,6 +961,6 @@ void dbus_call_trigger(unsigned int device, unsigned int action) {
     if (!dbus_message_iter_init(reply, &args)) {
         slog(SLOG_INFO, "Reply has no arguments");
     }
-    
+
     return;
 }
