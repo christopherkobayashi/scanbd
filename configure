@@ -16914,7 +16914,7 @@ $as_echo "#define HAVE_STDBOOL_H 1" >>confdefs.h
 fi
 
 
-OS_CFLAGS="-Wall -Wextra -std=c99 -g"
+OS_CFLAGS="-Wall -Wextra -std=c11 -g"
 
 for ac_header in linux/limits.h \
 		 utmp.h \
