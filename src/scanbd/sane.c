@@ -194,7 +194,7 @@ static sane_opt_value_t get_sane_option_value(SANE_Handle* h, int index) {
     // handle h
     // if option can't be found or other catastrophy happens, the
     // value 0 gets returned
-#if ((__STDC_VERSION__  - 0) < 201112L)
+#if ((__STDC_VERSION__  - 0) < 201112L) || (((__GNUC__ - 0) < 5) && ((__GNUC_MINOR__ - 0) < 9))
     sane_opt_value_t res;
 #else
     sane_opt_value_t res = {};
