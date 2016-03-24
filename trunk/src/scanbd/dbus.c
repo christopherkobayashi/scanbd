@@ -145,9 +145,14 @@ void dbus_send_signal(const char* signal_name, const char* arg) {
 }
 
 static void hook_device_ex(const char *param, const char *action_name, const char *dev_name) {
+    slog(SLOG_DEBUG, "hook_device_ex");
     assert(dev_name);
     assert(param);
     assert(action_name);
+
+    slog(SLOG_DEBUG, "hook_device_ex: p: %s");
+    slog(SLOG_DEBUG, "hook_device_ex: a: %s");
+    slog(SLOG_DEBUG, "hook_device_ex: d: %s");
 
     cfg_t* cfg_sec_global = cfg_getsec(cfg, C_GLOBAL);
     assert(cfg_sec_global);
@@ -284,6 +289,7 @@ static void hook_device_ex(const char *param, const char *action_name, const cha
 }
 
 static void hook_device_insert(const char *dev_name) {
+    slog(SLOG_DEBUG, "hook_device_insert");
     hook_device_ex(C_DEVICE_INSERT_SCRIPT, "insert", dev_name);
 }
 
