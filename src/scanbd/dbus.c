@@ -61,7 +61,7 @@ void dbus_send_signal_argv(const char* signal_name, char** argv) {
     }
 
     if (argv != NULL) {
-#if ((__STDC_VERSION__  - 0) < 201112L) || (((__GNUC__ - 0) < 5) && ((__GNUC_MINOR__ - 0) < 9))
+#if ((__STDC_VERSION__  - 0) < 201112L) || ((__GNUC__ - 0) < 5)
         DBusMessageIter args;
         DBusMessageIter sub;
 #else
@@ -123,7 +123,7 @@ void dbus_send_signal(const char* signal_name, const char* arg) {
     }
 
     if (arg != NULL) {
-#if ((__STDC_VERSION__  - 0) < 201112L) || (((__GNUC__ - 0) < 5) && ((__GNUC_MINOR__ - 0) < 9))
+#if ((__STDC_VERSION__  - 0) < 201112L) || ((__GNUC__ - 0) < 5)
         DBusMessageIter args;
 #else
         DBusMessageIter args = {};
@@ -546,7 +546,7 @@ void sane_trigger_action_async(int device, int action) {
 }
 
 static void dbus_method_trigger(DBusMessage *message) {
-#if ((__STDC_VERSION__  - 0) < 201112L) || (((__GNUC__ - 0) < 5) && ((__GNUC_MINOR__ - 0) < 9))
+#if ((__STDC_VERSION__  - 0) < 201112L) || ((__GNUC__ - 0) < 5)
         DBusMessageIter args;
 #else
         DBusMessageIter args = {};
@@ -843,7 +843,7 @@ void dbus_call_method(const char* method, const char* value) {
     assert(msg);
 
     if (value != NULL) {
-#if ((__STDC_VERSION__  - 0) < 201112L) || (((__GNUC__ - 0) < 5) && ((__GNUC_MINOR__ - 0) < 9))
+#if ((__STDC_VERSION__  - 0) < 201112L) || ((__GNUC__ - 0) < 5)
         DBusMessageIter args;
 #else
         DBusMessageIter args = {};
@@ -883,7 +883,7 @@ void dbus_call_method(const char* method, const char* value) {
     }
     dbus_pending_call_unref(pending);
 
-#if ((__STDC_VERSION__  - 0) < 201112L) || (((__GNUC__ - 0) < 5) && ((__GNUC_MINOR__ - 0) < 9))
+#if ((__STDC_VERSION__  - 0) < 201112L) || ((__GNUC__ - 0) < 5)
         DBusMessageIter args;
 #else
         DBusMessageIter args = {};
@@ -921,7 +921,7 @@ void dbus_call_trigger(unsigned int device, unsigned int action) {
 
     dbus_uint32_t dev = device;
     dbus_uint32_t act = action;
-#if ((__STDC_VERSION__  - 0) < 201112L) || (((__GNUC__ - 0) < 5) && ((__GNUC_MINOR__ - 0) < 9))
+#if ((__STDC_VERSION__  - 0) < 201112L) || ((__GNUC__ - 0) < 5)
         DBusMessageIter args;
 #else
         DBusMessageIter args = {};
