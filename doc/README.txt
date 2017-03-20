@@ -119,7 +119,7 @@ USE_SCANBUTTOND=yes gmake -e -f Makefile.simple clean all
 1.1.4) Suse
 On Suse based systems you will need the same of similar packages installed as
 on Fedora, but: sane-backends-devel in Suse does not pull in all required 
-dependencies. Please make sure that you alse have installed:
+dependencies. Please make sure that you also have installed:
 libjpeg-devel
 libexif-devel
 libgphoto2-devel
@@ -133,6 +133,9 @@ libconfuse: $PORTSDIR/ports/devel/libconfuse
 dbus: $PORTSDIR/
 libusb1: $PORTSDIR/devel/libusb1
 sane-backends: $PORTSDIR/graphics/sane-backends
+
+1.1.6) Gentoo:
+You need to install dev-libs/confuse and media-gfx/sane-backends via portage.
 
 1.2) using autotools configure script
 
@@ -167,14 +170,14 @@ Please review Makefile.conf (after running gmake -f Makefile.simple) before
 running make again. Edit the file as appropriate to set your preferences.
 It is still possible to set variables on the make command line (e.g.
 USE_SCANBUTTOND=yes gmake -f Makefile.simple
-but setting yorpreferences in Makefile.conf is much easier.
+but setting your preferences in Makefile.conf is much easier.
 
 scanbd now uses libudev by default instead of HAL. 
 We recommend setting 
 USE_LIBUDEV =
 in Makefile.conf to disable udev.
 
-If you want to use the the scanbuttond backends enable
+If you want to use the scanbuttond backends enabled
 
 USE_SCANBUTTOND=yes
 
@@ -308,8 +311,7 @@ dll.conf as stated above (not include the net backend)
 
 e.g.:
 
-export SANE_CONFIG_DIR=/usr/local/etc/scanbd
-/usr/local/bin/scanbd 
+export SANE_CONFIG_DIR=/usr/local/etc/scanbd /usr/local/bin/scanbd 
 (add a -c /usr/local/etc/scanbd/scanbd.conf if you installed in another
 directory than the one configured at compile time)
 
