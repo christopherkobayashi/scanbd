@@ -188,7 +188,7 @@ to useful places (or use
 
 gmake install
 
-to copy to /usr/local/bin and /usr/local/etc/scanbd).
+to copy to /usr/local/sbin and /usr/local/etc/scanbd).
 
 If you use the scanbuttond-backends, copy the shared-objects from 
 scanbuttond/backends directory to /usr/local/lib/scanbd/scanbuttond/backends
@@ -204,14 +204,14 @@ then restart dbus and hald.
 
 edit the saned-line to use scanbd as a wrapper, e.g.:
 ---
-sane-port stream tcp4 nowait saned /usr/local/bin/scanbm scanbm 
+sane-port stream tcp4 nowait saned /usr/local/sbin/scanbm scanbm 
 ---
 
 -or-
 
 (if the saned user can't open the devices, e.g. ubuntu)
 ---
-sane-port stream tcp4 nowait root /usr/local/bin/scanbm scanbm 
+sane-port stream tcp4 nowait root /usr/local/sbin/scanbm scanbm 
 ---
 
 If you installed the config files in a different location, you may have to add
@@ -237,7 +237,7 @@ service sane-port
         wait        = no
         user        = saned
         group       = scanner
-        server      = /usr/local/bin/scanbm
+        server      = /usr/local/sbin/scanbm
         server_args = scanbm
         disable     = no
 }
@@ -311,7 +311,7 @@ dll.conf as stated above (not include the net backend)
 
 e.g.:
 
-export SANE_CONFIG_DIR=/usr/local/etc/scanbd /usr/local/bin/scanbd 
+export SANE_CONFIG_DIR=/usr/local/etc/scanbd /usr/local/sbin/scanbd 
 (add a -c /usr/local/etc/scanbd/scanbd.conf if you installed in another
 directory than the one configured at compile time)
 
@@ -320,7 +320,7 @@ or use one of the startup files from the integration directory.
 If you are unfamiliar with scanbd it would be best to first try starting scanbd 
 in the foreground (-f) and in debug mode (-d):
 
-/usr/local/bin/scanbd -d7 -f -c /usr/local/etc/scanbd/scanbd.conf
+/usr/local/sbin/scanbd -d7 -f -c /usr/local/etc/scanbd/scanbd.conf
 
 Then you can watch scanbd recognizing all scanners and polling the options / 
 buttons. If you press the buttons or modify the function knob or insert/remove 
