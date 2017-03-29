@@ -150,9 +150,9 @@ static void hook_device_ex(const char *param, const char *action_name, const cha
     assert(param);
     assert(action_name);
 
-    slog(SLOG_DEBUG, "hook_device_ex: p: %s");
-    slog(SLOG_DEBUG, "hook_device_ex: a: %s");
-    slog(SLOG_DEBUG, "hook_device_ex: d: %s");
+    slog(SLOG_DEBUG, "hook_device_ex: parameter: %s", param);
+    slog(SLOG_DEBUG, "hook_device_ex: action: %s", action_name);
+    slog(SLOG_DEBUG, "hook_device_ex: device: %s", dev_name);
 
     cfg_t* cfg_sec_global = cfg_getsec(cfg, C_GLOBAL);
     assert(cfg_sec_global);
