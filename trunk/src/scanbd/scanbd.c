@@ -165,7 +165,7 @@ void sig_term_handler(int signal) {
         if (!scanbd_options.foreground) {
             // reclaim the old uid (root) to unlink the pidfile
             // mostly neccessary if the pidfile lives in /var/run
-            if (seteuid((pid_t)0) < 0) {
+            if (seteuid((uid_t)0) < 0) {
                 slog(SLOG_WARN, "Can't acquire uid root to unlink pidfile %s : %s",
                      pidfile, strerror(errno));
                 slog(SLOG_DEBUG, "euid: %d, egid: %d",
