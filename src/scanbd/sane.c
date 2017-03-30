@@ -1051,6 +1051,27 @@ static void* sane_poll(void* arg) {
                         }
                     }
                     else { // child
+                        uid_t euid = geteuid();
+                        uid_t egid = getegid();
+                        if (seteuid(0) < 0) {
+                            slog(SLOG_DEBUG, "Can't seteuid root: %s", strerror(errno));
+                            exit(EXIT_FAILURE);
+                        } 
+                        if (setegid(0) < 0) {
+                            slog(SLOG_DEBUG, "Can't setegid root: %s", strerror(errno));
+                            exit(EXIT_FAILURE);
+                        } 
+                        slog(SLOG_DEBUG, "setgid to gid=%d", egid);
+                        if (setgid(egid) < 0) {
+                            slog(SLOG_DEBUG, "Can't setgid for gid=%d: %s", egid, strerror(errno));
+                            exit(EXIT_FAILURE);
+                        } 
+                        slog(SLOG_DEBUG, "setuid to uid=%d", euid);
+                        if (setuid(euid) < 0) {
+                            slog(SLOG_DEBUG, "Can't setuid for uid=%d : %s", euid, strerror(errno));
+                            exit(EXIT_FAILURE);
+                        } 
+                        
                         slog(SLOG_DEBUG, "exec for %s", script_abs);
                         if (access(script_abs, F_OK | X_OK) < 0) {
                             slog(SLOG_ERROR, "access: %s", strerror(errno));
@@ -1061,7 +1082,7 @@ static void* sane_poll(void* arg) {
                         }
                         else {
                             slog(SLOG_DEBUG, "octal mode for %s: %lo", script_abs, stat_buf.st_mode);
-                            slog(SLOG_DEBUG, "uid: %ld, gid: %ld", stat_buf.st_uid, stat_buf.st_gid);
+                            slog(SLOG_DEBUG, "file uid: %ld, file gid: %ld", stat_buf.st_uid, stat_buf.st_gid);
                         }
                         if (execle(script_abs, script_abs, NULL, env) < 0) {
                             slog(SLOG_ERROR, "execlp: %s", strerror(errno));
