@@ -56,7 +56,7 @@ scanbd-manager scanbm restarts the polling by sending another dbus-signal (or th
 posix-signal SIGUSR2) to scanbd. scanbd now reenables polling of the devices.
 
 Scanbm is actually only a symbolic link to scanbd. Manager mode can be 
-activatied by calling scanbd as scanbm OR as scanbd -m as in previous version
+activatied by calling scanbd as scanbm OR as scanbd -m as in previous versions
 of scanbd.
 
 So all applications must be enabled to use network-scanning (even if the 
