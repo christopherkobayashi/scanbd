@@ -23,6 +23,8 @@
 #include "scanbd.h"
 #include "scanbd_dbus.h"
 
+#define CANCEL_TEST
+
 // all programm-global sane functions use this mutex to avoid races
 #ifdef PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP
 // this is non-portable
@@ -603,6 +605,11 @@ static void sane_find_matching_options(sane_thread_t* st, cfg_t* sec) {
 // TODO: refactor, this is awfull long!
 
 static void* sane_poll(void* arg) {
+#ifdef CANCEL_TEST
+    if (pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, NULL) < 0) {
+        slog(SLOG_ERROR, "pthread_setcancelstate: %s", strerror(errno));
+    }
+#endif
     sane_thread_t* st = (sane_thread_t*)arg;
     assert(st != NULL);
     slog(SLOG_DEBUG, "sane_poll");
@@ -745,11 +752,22 @@ static void* sane_poll(void* arg) {
     
     slog(SLOG_DEBUG, "Start the polling for device %s", st->dev->name);
     while(true) {
-
+#ifdef CANCEL_TEST
+        if (pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL) < 0) {
+            slog(SLOG_ERROR, "pthread_setcancelstate: %s", strerror(errno));
+        }
+#endif
         slog(SLOG_DEBUG, "polling thread for %s cancellation point", st->dev->name);
         // special cancellation point
         pthread_testcancel();
-        slog(SLOG_DEBUG, "polling device %s", st->dev->name);
+
+#ifdef CANCEL_TEST
+    if (pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, NULL) < 0) {
+        slog(SLOG_ERROR, "pthread_setcancelstate: %s", strerror(errno));
+    }
+#endif
+
+    slog(SLOG_DEBUG, "polling device %s", st->dev->name);
 
         for(si = 0; si < st->num_of_options_with_scripts; si += 1) {
             const SANE_Option_Descriptor* odesc = NULL;
@@ -773,7 +791,7 @@ static void* sane_poll(void* arg) {
 
             sane_opt_value_t value;
             sane_option_value_init(&value);
-            // push the cleanup-handle to free the value storage
+            // push the cleanup-handler to free the value storage
             pthread_cleanup_push(sane_thread_cleanup_value, &value);
 
             // get the actual value
@@ -1162,7 +1180,7 @@ static void* sane_poll(void* arg) {
 
         // regain the mutex
         // because pthread_cleanup_push is a macro we can't use it here
-        // pthread_cleanup_push(sane_thread_cleanup_mutex, ((void*)&st->mutex));
+//         pthread_cleanup_push(sane_thread_cleanup_mutex, ((void*)&st->mutex));
         if (pthread_mutex_lock(&st->mutex) < 0) {
             // if we can't get the mutex, something is heavily wrong!
             slog(SLOG_ERROR, "pthread_mutex_lock: %s", strerror(errno));
