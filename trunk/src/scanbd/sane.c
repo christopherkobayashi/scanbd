@@ -1279,6 +1279,11 @@ void start_sane_threads(void) {
     }
     // allocate the thread list
     assert(sane_poll_threads == NULL);
+    
+    if (num_devices == 0) {
+        slog(SLOG_ERROR, "no devices, not starting any polling thread");
+        goto cleanup;
+    } 
     sane_poll_threads = (sane_thread_t*) calloc(num_devices, sizeof(sane_thread_t));
     if (sane_poll_threads == NULL) {
         slog(SLOG_ERROR, "Can't allocate memory for polling threads");
