@@ -3,7 +3,7 @@
  *
  *  scanbd - KMUX scanner button daemon
  *
- *  Copyright (C) 2008 - 2016 Wilhelm Meier (wilhelm.meier@fh-kl.de)
+ *  Copyright (C) 2008 - 2017 Wilhelm Meier (wilhelm.wm.meier@googlemail.com)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -24,6 +24,8 @@
 #include <scanbuttond/scanbuttond.h>
 #include "scanbuttond_loader.h"
 #include "scanbuttond_wrapper.h"
+
+#define CANCEL_TEST
 
 // all programm-global scbtn functions use this mutex to avoid races
 #ifdef PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP
@@ -323,6 +325,11 @@ void scbtn_find_matching_functions(scbtn_thread_t* st, cfg_t* sec) {
 }
 
 void* scbtn_poll(void* arg) {
+#ifdef CANCEL_TEST
+    if (pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, NULL) < 0) {
+        slog(SLOG_ERROR, "pthread_setcancelstate: %s", strerror(errno));
+    }
+#endif
     scbtn_thread_t* st = (scbtn_thread_t*)arg;
     assert(st != NULL);
     slog(SLOG_DEBUG, "scbtn_poll");
@@ -466,27 +473,40 @@ void* scbtn_poll(void* arg) {
     slog(SLOG_DEBUG, "Start the polling for device %s", st->dev->product);
 
     while(true) {
-        slog(SLOG_DEBUG, "polling thread for %s cancellation point", st->dev->product);
+        slog(SLOG_DEBUG, "polling thread for %s, before cancellation point", st->dev->name);
+#ifdef CANCEL_TEST
+        if (pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL) < 0) {
+            slog(SLOG_ERROR, "pthread_setcancelstate: %s", strerror(errno));
+        }
+#endif
         // special cancellation point
         pthread_testcancel();
+        
+#ifdef CANCEL_TEST
+        if (pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, NULL) < 0) {
+            slog(SLOG_ERROR, "pthread_setcancelstate: %s", strerror(errno));
+        }
+#endif
+        slog(SLOG_DEBUG, "polling thread for %s, after cancellation point", st->dev->name);
+        
         slog(SLOG_DEBUG, "polling device %s", st->dev->product);
-
+        
         int button = backend->scanbtnd_get_button((scanner_t*)st->dev);
         if (button) {
             slog(SLOG_INFO, "################ button %d pressed ################", button);
         } else {
             slog(SLOG_INFO, "button %d", button);
         }
-
+        
         for(si = 0; si < st->num_of_options_with_scripts; si += 1) {
             //	    const scbtn_Option_Descriptor* odesc = NULL;
             //	    assert((odesc = scbtn_get_option_descriptor(st->h, st->opts[i].number)) != NULL);
-
+            
             const backend_t* b = st->dev->meta_info;
             slog(SLOG_INFO, "option: %d", st->opts[si].number);
             const char* name = scanbtnd_button_name(b, st->opts[si].number);
             assert(name);
-
+            
             if (st->opts[si].script != NULL) {
                 if (strlen(st->opts[si].script) <= 0) {
                     slog(SLOG_WARN, "No valid script for option %s for device %s",
@@ -501,19 +521,19 @@ void* scbtn_poll(void* arg) {
             }
             assert(st->opts[si].script != NULL);
             assert(strlen(st->opts[si].script) > 0);
-
+            
             //	    scbtn_opt_value_t value;
             //	    scbtn_option_value_init(&value);
             // push the cleanup-handle to free the value storage
             pthread_cleanup_push(scbtn_thread_cleanup_value, NULL);
-
+            
             slog(SLOG_INFO, "checking option %s number %d (%d) for device %s",
                  name, st->opts[si].number, si,
                  st->dev->product);
-
-
+            
+            
             unsigned long value = 0;
-
+            
             if ((button > 0) && (button == st->opts[si].number)) {
                 value = 1;
                 slog(SLOG_INFO, "button %d has been pressed.", button);
@@ -528,7 +548,7 @@ void* scbtn_poll(void* arg) {
                     }
                 }
             }
-
+            
             // pass the responsibility to free the value to the main
             // thread, if this thread gets canceled
             if (pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, NULL) < 0) {
@@ -539,17 +559,17 @@ void* scbtn_poll(void* arg) {
             if (pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL) < 0) {
                 slog(SLOG_ERROR, "pthread_setcancelstate: %s", strerror(errno));
             }
-
+            
             // was there a value change?
             if (st->triggered && (st->triggered_option >= 0)) {
                 assert(st->triggered_option >= 0); // index into the opts-array
                 assert(st->triggered_option < st->num_of_options_with_scripts);
-
+                
                 slog(SLOG_ERROR, "trigger action for device %s with script %s",
                      st->dev->product, st->opts[st->triggered_option].script);
-
+                
                 // prepare the environment for the script to be called
-
+                
                 // number of env-vars =
                 // number of found function-options
                 // plus the values in the environment-section (2):
@@ -558,9 +578,9 @@ void* scbtn_poll(void* arg) {
                 // PATH, PWD, USER, HOME
                 // plus the sentinel
                 cfg_t* global_envs = cfg_getsec(cfg_sec_global, C_ENVIRONMENT);
-
+                
                 assert(st->num_of_options_with_functions == 0);
-
+                
                 int number_of_envs = st->num_of_options_with_functions + 4 + 2 + 1;
                 char** env = calloc(number_of_envs, sizeof(char*));
                 for(int e = 0; e < number_of_envs; e += 1) {
@@ -640,46 +660,46 @@ void* scbtn_poll(void* arg) {
                 }
                 env[e] = NULL;
                 assert(e == number_of_envs-1);
-
+                
                 // sendout an dbus-signal with all the values as
                 // arguments
                 dbus_send_signal(SCANBD_DBUS_SIGNAL_SCAN_BEGIN, st->dev->product);
-
+                
                 //dbus_send_signal_argv_async(SCANBD_DBUS_SIGNAL_TRIGGER, env);
                 dbus_send_signal_argv(SCANBD_DBUS_SIGNAL_TRIGGER, env);
-
+                
                 // the action-script will use the device,
                 // so we have to release the device
                 //		scbtn_close(st->h);
                 //		st->h = NULL;
-
+                
                 if (backend->scanbtnd_close((scanner_t*)st->dev) < 0) {
                     slog(SLOG_ERROR, "unable to close scanner backend");
                 }
-
+                
                 assert(st->triggered_option >= 0);
                 assert(st->opts[st->triggered_option].script);
                 assert(strlen(st->opts[st->triggered_option].script) > 0);
-
+                
                 // need to copy the values because we leave the
                 // critical section
                 // int triggered_option = st->triggered_option;
-
+                
                 char* script_abs = make_script_path_abs(st->opts[st->triggered_option].script);
                 assert(script_abs);
-
+                
                 // leave the critical section
                 if (pthread_mutex_unlock(&st->mutex) < 0) {
                     // if we can't unlock the mutex, something is heavily wrong!
                     slog(SLOG_ERROR, "pthread_mutex_unlock: %s", strerror(errno));
                     pthread_exit(NULL);
                 }
-
+                
                 if (strcmp(script_abs, SCANBD_NULL_STRING) != 0) {
-
+                    
                     assert(timeout > 0);
                     usleep(timeout * 1000); //ms
-
+                    
                     pid_t cpid;
                     if ((cpid = fork()) < 0) {
                         slog(SLOG_ERROR, "Can't fork: %s", strerror(errno));
@@ -707,11 +727,11 @@ void* scbtn_poll(void* arg) {
                         exit(EXIT_FAILURE); // not reached
                     }
                 } // script_abs == SCANBD_NULL_STRING
-
+                
                 assert(script_abs != NULL);
                 free(script_abs);
                 script_abs = NULL;
-
+                
                 // free (last element is the sentinel!)
                 assert(env != NULL);
                 for(int e = 0; e < number_of_envs - 1; e += 1) {
@@ -719,21 +739,21 @@ void* scbtn_poll(void* arg) {
                     free(env[e]);
                 }
                 free(env);
-
+                
                 // enter the critical section
                 if (pthread_mutex_lock(&st->mutex) < 0) {
                     // if we can't get the mutex, something is heavily wrong!
                     slog(SLOG_ERROR, "pthread_mutex_lock: %s", strerror(errno));
                     pthread_exit(NULL);
                 }
-
+                
                 st->triggered = false;
                 st->triggered_option = -1; // invalid
                 // we need to trigger all waiting threads
                 if (pthread_cond_broadcast(&st->cv) < 0) {
                     slog(SLOG_ERROR, "pthread_cond_broadcats: this shouln't happen");
                 }
-
+                
                 // leave the critical section
                 if (pthread_mutex_unlock(&st->mutex) < 0) {
                     // if we can't release the mutex, something is heavily wrong!
@@ -742,19 +762,19 @@ void* scbtn_poll(void* arg) {
                 }
                 // sleep the timeout to settle devices, necessary?
                 usleep(timeout * 1000); //ms
-
+                
                 // send out the debus signal
                 dbus_send_signal(SCANBD_DBUS_SIGNAL_SCAN_END, st->dev->product);
-
+                
                 // enter the critical section
                 if (pthread_mutex_lock(&st->mutex) < 0) {
                     // if we can't get the mutex, something is heavily wrong!
                     slog(SLOG_ERROR, "pthread_mutex_lock: %s", strerror(errno));
                     pthread_exit(NULL);
                 }
-
+                
                 slog(SLOG_DEBUG, "reopen device %s", st->dev->product);
-
+                
                 int ores = backend->scanbtnd_open((scanner_t*)st->dev);
                 if (ores != 0) {
                     slog(SLOG_WARN, "scanbtnd_open failed, error code: %d", ores);
@@ -769,9 +789,9 @@ void* scbtn_poll(void* arg) {
                 }
             } // if triggered
         } // foreach option
-
+        
         // release the mutex
-
+        
         // because pthread_cleanup_pop is a macro we can't use it here
         //	 pthread_cleanup_pop(1);
         if (pthread_mutex_unlock(&st->mutex) < 0) {
@@ -779,10 +799,10 @@ void* scbtn_poll(void* arg) {
             slog(SLOG_ERROR, "pthread_mutex_unlock: %s", strerror(errno));
             pthread_exit(NULL);
         }
-
+        
         // sleep the polling timeout
         usleep(timeout * 1000); //ms
-
+        
         // regain the mutex
         // because pthread_cleanup_push is a macro we can't use it here
         // pthread_cleanup_push(scbtn_thread_cleanup_mutex, ((void*)&st->mutex));

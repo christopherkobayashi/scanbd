@@ -3,7 +3,7 @@
  *
  *  scanbd - KMUX scanner button daemon
  *
- *  Copyright (C) 2008 - 2016 Wilhelm Meier (wilhelm.meier@fh-kl.de)
+ *  Copyright (C) 2008 - 2017 Wilhelm Meier (wilhelm.wm.meier@googlemail.com)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -752,12 +752,12 @@ static void* sane_poll(void* arg) {
     
     slog(SLOG_DEBUG, "Start the polling for device %s", st->dev->name);
     while(true) {
+        slog(SLOG_DEBUG, "polling thread for %s, before cancellation point", st->dev->name);
 #ifdef CANCEL_TEST
         if (pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL) < 0) {
             slog(SLOG_ERROR, "pthread_setcancelstate: %s", strerror(errno));
         }
 #endif
-        slog(SLOG_DEBUG, "polling thread for %s cancellation point", st->dev->name);
         // special cancellation point
         pthread_testcancel();
 
@@ -766,6 +766,7 @@ static void* sane_poll(void* arg) {
         slog(SLOG_ERROR, "pthread_setcancelstate: %s", strerror(errno));
     }
 #endif
+    slog(SLOG_DEBUG, "polling thread for %s, after cancellation point", st->dev->name);
 
     slog(SLOG_DEBUG, "polling device %s", st->dev->name);
 
