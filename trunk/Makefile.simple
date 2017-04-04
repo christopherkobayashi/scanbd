@@ -60,6 +60,9 @@ scanbd:
 scanbuttond:
 	$(MAKE) -f Makefile.simple -C src/scanbuttond all
 
+test:
+	$(MAKE) -C src/test all
+
 doc:
 	 $(MAKE) -f Makefile.simple -C doc all
 

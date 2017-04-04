@@ -86,7 +86,7 @@ scanbd on different platforms. The list may not be exhaustive.
 
 1.1.1) Debian
 Needed packages on debian-based systems:
-libconfuse-dev libsane-dev libudev-dev libusb-dev
+libconfuse-dev libsane-dev libudev-dev libusb-dev libdbus-1-dev
 To use HAL instead of libudev you need:
 libhal-dev
 
