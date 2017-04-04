@@ -314,9 +314,11 @@ static void hal_device_added(LibHalContext* ctx, const char *udi) {
 #else
         stop_scbtn_threads();
 #endif
-        slog(SLOG_DEBUG, "sane_exit");
 #ifdef USE_SANE
+# ifdef SANE_REINIT
+        slog(SLOG_DEBUG, "sane_exit");
         sane_exit();
+# endif
 #else
         scbtn_shutdown();
 #endif
@@ -330,7 +332,9 @@ static void hal_device_added(LibHalContext* ctx, const char *udi) {
 
         slog(SLOG_DEBUG, "sane_init");
 #ifdef USE_SANE
+# ifdef SANE_REINIT        
         sane_init(NULL, NULL);
+# endif
         get_sane_devices();
         start_sane_threads();
 #else
@@ -367,9 +371,11 @@ static void hal_device_removed(LibHalContext* ctx, const char *udi) {
     stop_scbtn_threads();
 #endif
 
-    slog(SLOG_DEBUG, "sane_exit");
 #ifdef USE_SANE
+# ifdef SANE_REINIT
+    slog(SLOG_DEBUG, "sane_exit");
     sane_exit();
+# endif
 #else
     scbtn_shutdown();
 #endif
@@ -382,7 +388,9 @@ static void hal_device_removed(LibHalContext* ctx, const char *udi) {
 
     slog(SLOG_DEBUG, "sane_init");
 #ifdef USE_SANE
+# ifdef SANE_REINIT
     sane_init(NULL, NULL);
+# endif
     get_sane_devices();
     start_sane_threads();
 #else
@@ -411,9 +419,11 @@ void dbus_signal_device_added(void) {
 #else
     stop_scbtn_threads();
 #endif // USE_SANE
-    slog(SLOG_DEBUG, "sane_exit");
 #ifdef USE_SANE
+# ifdef SANE_REINIT
+    slog(SLOG_DEBUG, "sane_exit");
     sane_exit();
+# endif
 #else
     scbtn_shutdown();
 #endif // USE_SANE
@@ -426,8 +436,11 @@ void dbus_signal_device_added(void) {
     hook_device_insert("dbus device");
 
 #ifdef USE_SANE
+# ifdef SANE_REINIT
     slog(SLOG_DEBUG, "sane_init");
     sane_init(NULL, NULL);
+# endif
+    slog(SLOG_DEBUG, "get new devices");
     get_sane_devices();
     start_sane_threads();
 #else
@@ -459,9 +472,11 @@ void dbus_signal_device_removed(void) {
     stop_scbtn_threads();
 #endif
 
-    slog(SLOG_DEBUG, "sane_exit");
 #ifdef USE_SANE
+# ifdef SANE_REINIT
+    slog(SLOG_DEBUG, "sane_exit");
     sane_exit();
+# endif
 #else
     scbtn_shutdown();
 #endif
@@ -473,9 +488,12 @@ void dbus_signal_device_removed(void) {
 
     hook_device_remove("dbus device");
 
-    slog(SLOG_DEBUG, "sane_init");
 #ifdef USE_SANE
+# ifdef SANE_REINIT
+    slog(SLOG_DEBUG, "sane_init");
     sane_init(NULL, NULL);
+# endif
+    slog(SLOG_DEBUG, "get new devices");
     get_sane_devices();
     start_sane_threads();
 #else

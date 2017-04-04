@@ -24,7 +24,7 @@ include ../../Makefile.include
 
 .PHONY: all
 
-all: test01
+all: test01 test02
 
 test01: test01.o
 
