@@ -43,8 +43,9 @@ int main () {
            exit(EXIT_FAILURE);
        }
        sleep (1);
-       printf("sane_exit\n");
+       printf("before sane_exit\n");
        sane_exit();
+       printf("after sane_exit\n");
        sleep (1);
    }
    exit(EXIT_SUCCESS);
