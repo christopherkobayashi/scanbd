@@ -49,6 +49,7 @@
 #include "scanbd_dbus.h"
 #include "udev.h"
 
+// #define SANE_REINIT // do a sane_exit()/sane_init() sequence if new devices are found
 #define SANE_REINIT_TIMEOUT 3 // TODO: don't know if this is really neccessary
 
 #define SCANBUTTOND_ALARM_TIMEOUT 5 // reconfigure after this amount of seconds if
