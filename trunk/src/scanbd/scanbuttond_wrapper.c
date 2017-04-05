@@ -473,7 +473,7 @@ void* scbtn_poll(void* arg) {
     slog(SLOG_DEBUG, "Start the polling for device %s", st->dev->product);
 
     while(true) {
-        slog(SLOG_DEBUG, "polling thread for %s, before cancellation point", st->dev->name);
+        slog(SLOG_DEBUG, "polling thread for %s, before cancellation point", st->dev->product);
 #ifdef CANCEL_TEST
         if (pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL) < 0) {
             slog(SLOG_ERROR, "pthread_setcancelstate: %s", strerror(errno));
@@ -487,7 +487,7 @@ void* scbtn_poll(void* arg) {
             slog(SLOG_ERROR, "pthread_setcancelstate: %s", strerror(errno));
         }
 #endif
-        slog(SLOG_DEBUG, "polling thread for %s, after cancellation point", st->dev->name);
+        slog(SLOG_DEBUG, "polling thread for %s, after cancellation point", st->dev->product);
         
         slog(SLOG_DEBUG, "polling device %s", st->dev->product);
         
