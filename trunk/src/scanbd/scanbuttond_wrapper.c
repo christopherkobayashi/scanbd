@@ -1062,31 +1062,56 @@ const char* scanbtnd_button_name(const backend_t* backend, unsigned int button) 
     assert(backend_name);
     slog(SLOG_INFO, "scanbtnd_button_name, backend: %s", backend_name);
 
-    if (strcmp("snapscan", backend_name)) {
-        assert(button <= 5);
+    if (strncmp("Genesys", backend_name, 7) == 0) {
         switch(button) {
         case 0:
-            return NULL;
+            return "zero";
             break;
         case 1:
-            return "scan"; // "web";
+            return "copy"; 
             break;
         case 2:
-            return "copy"; // "email";
+            return "scan"; 
             break;
         case 3:
-            return "email"; // "copy";
+            return "pdf"; 
             break;
         case 4:
-            return "pdf"; // "send";
+            return "email"; 
             break;
         case 5:
             return "stop";
             break;
         default:
-            return NULL;
+            return "default";
             break;
         }
+    }
+    else {
+        switch(button) {
+        case 0:
+            return "zero";
+            break;
+        case 1:
+            return "scan";
+            break;
+        case 2:
+            return "copy"; 
+            break;
+        case 3:
+            return "email";
+            break;
+        case 4:
+            return "pdf"; 
+            break;
+        case 5:
+            return "stop";
+            break;
+        default:
+            return "default";
+            break;
+        }
+        
     }
     return NULL;
 }
