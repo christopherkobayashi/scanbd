@@ -10,7 +10,8 @@ scannerconf_DATA = \
 	scanner.d/hp.conf \
 	scanner.d/pixma.conf \
 	scanner.d/snapscan.conf \
-	scanner.d/canon.conf
+	scanner.d/canon.conf \
+	scanner.d/plustek.conf
 
 EXTRA_DIST = \
 	scanbd.conf \
@@ -20,5 +21,6 @@ EXTRA_DIST = \
 	scanner.d/hp.conf \
 	scanner.d/pixma.conf \
 	scanner.d/snapscan.conf \
-	scanner.d/canon.conf
+	scanner.d/canon.conf \
+	scanner.d/plustek.conf
 
