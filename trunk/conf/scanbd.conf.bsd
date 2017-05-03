@@ -98,7 +98,7 @@ global {
 		}
 		desc   = "Scan to file"
 		# script must be an absolute pathname to the action script without arguments
-		script = "/usr/local/etc/scanbd/scanadf.script"
+		script = "/usr/local/etc/scanbd/scripts/scanadf.script"
 	}
 	action email {
 		filter = "^email$"
@@ -108,7 +108,7 @@ global {
 		}
 		desc   = "Scan to email"
 		# script must be an absolute pathname to the action script without arguments
-		script = "/usr/local/etc/scanbd/test.script"
+		script = "/usr/local/etc/scanbd/scripts/test.script"
 	}
 	action copy {
 		filter = "^copy$"
@@ -118,7 +118,7 @@ global {
 		}
 		desc   = "Copy to printer"
 		# script must be an absolute pathname to the action script without arguments
-		script = "/usr/local/etc/scanbd/test.script"
+		script = "/usr/local/etc/scanbd/scripts/test.script"
 	}
 	action preview {
 		filter = "^preview$"
@@ -128,13 +128,13 @@ global {
 		}
 		desc   = "Preview"
 		# script must be an absolute pathname to the action script without arguments
-		script = "/usr/local/etc/scanbd/example.script"
+		script = "/usr/local/etc/scanbd/scripts/example.script"
 	}
        	action globaltest {
        	             filter = "^message.*"
 	      	     desc   = "Test (print all env vars)"
 		     # script must be an absolute pathname to the action script without arguments
-	      	     script = "/usr/local/etc/scanbd/test.script"
+	      	     script = "/usr/local/etc/scanbd/scripts/test.script"
         }
 }
 
@@ -211,7 +211,7 @@ device snapscan {
 	      desc   = "Test"
 
 	      # script must be an absolute pathname to the action script without arguments
-	      script = "/usr/local/etc/scanbd/example.script"
+	      script = "/usr/local/etc/scanbd/scripts/example.script"
        }
 
        action web {
@@ -219,7 +219,7 @@ device snapscan {
               desc   = "Web"
 
               # script must be an absolute pathname to the action script without arguments
-              script = "/usr/local/etc/scanbd/example.script"
+              script = "/usr/local/etc/scanbd/scripts/example.script"
        }
 
        action send {
@@ -227,7 +227,7 @@ device snapscan {
               desc   = "Send"
 
               # script must be an absolute pathname to the action script without arguments
-              script = "/usr/local/etc/scanbd/example.script"
+              script = "/usr/local/etc/scanbd/scripts/example.script"
        }
 }
 
@@ -243,7 +243,7 @@ device hp {
 	      desc   = "Test"
 
 	      # script must be an absolute pathname to the action script without arguments
-	      script = "/usr/local/etc/scanbd/example.script"
+	      script = "/usr/local/etc/scanbd/scripts/example.script"
        }
 }
 
@@ -262,7 +262,7 @@ device avision {
 	      desc   = "Avision: Duplex Test"
 
 	      # script must be an absolute pathname to the action script without arguments
-	      script = "/usr/local/etc/scanbd/test.script"
+	      script = "/usr/local/etc/scanbd/scripts/test.script"
 
 	      string-trigger {
 	      		     from-value  = ""
