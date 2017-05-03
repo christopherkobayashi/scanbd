@@ -80,9 +80,9 @@ endif
 	mkdir -p "$(SCANBD_CFG_DIR)"/scanner.d
 	echo "Copy files to $(SCANBD_CFG_DIR)"
 	cp conf/scanbd.conf "$(SCANBD_CFG_DIR)"
-	cp scripts/example.script "$(SCANBD_CFG_DIR)"
-	cp scripts/scanadf.script "$(SCANBD_CFG_DIR)"
-	cp scripts/test.script "$(SCANBD_CFG_DIR)"
+	cp scripts/example.script "$(SCANBD_CFG_DIR)/scripts/"
+	cp scripts/scanadf.script "$(SCANBD_CFG_DIR)/scripts/"
+	cp scripts/test.script "$(SCANBD_CFG_DIR)/scripts/"
 	echo "Copy scanner config files to $(SCANBD_CFG_DIR)/scanner.d"
 	cp conf/scanner.d/*.conf "$(SCANBD_CFG_DIR)"/scanner.d
 	echo "Copy scanbd to $(BIN_DIR)"

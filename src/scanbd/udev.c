@@ -126,7 +126,7 @@ static void* udev_thread(void* arg)
         }
         else {
             assert(device);
-            slog(SLOG_INFO, "new devive");
+            slog(SLOG_INFO, "new device");
             const char* s = 0;
             s = udev_device_get_devtype(device);
             if (s) {
