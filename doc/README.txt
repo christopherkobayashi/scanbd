@@ -56,7 +56,7 @@ scanbd-manager scanbm restarts the polling by sending another dbus-signal (or th
 posix-signal SIGUSR2) to scanbd. scanbd now reenables polling of the devices.
 
 Scanbm is actually only a symbolic link to scanbd. Manager mode can be 
-activatied by calling scanbd as scanbm OR as scanbd -m as in previous versions
+activated by calling scanbd as scanbm OR as scanbd -m as in previous versions
 of scanbd.
 
 So all applications must be enabled to use network-scanning (even if the 
@@ -155,7 +155,7 @@ For all other options consult the output of
 ./configure --help
 
 If neither HAL nor libudev is available (e.g. OpenBSD), scanbd works without 
-dynamic detection of inserted or removed devices (but can be triggered by 
+dynamic detection of inserted or removed devices (but this can be triggered by 
 sending SIGHUP).
 
 1.3) using plain Makefiles
@@ -175,7 +175,7 @@ but setting your preferences in Makefile.conf is much easier.
 scanbd now uses libudev by default instead of HAL. 
 We recommend setting 
 USE_LIBUDEV =
-in Makefile.conf to disable udev.
+in Makefile.conf to disable udev (if you want to do so in order to use HAL).
 
 If you want to use the scanbuttond backends enabled
 
@@ -305,7 +305,7 @@ backend but with all needed local scanner backends!
 So as a safe rule: 
 - the file /etc/sane.d/dll.conf should only contain the net backend   
 - copy all config-files from /etc/sane.d to /usr/local/etc/scanbd and edit 
-dll.conf as stated above (not include the net backend)
+dll.conf as stated above (must not include the net backend)
 
 7) start scanbd
 
