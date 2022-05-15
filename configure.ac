@@ -138,7 +138,7 @@ AC_ARG_WITH(scanbuttondlibdir,
 AC_SUBST(SCANBUTTOND_LIB_DIR)
 
 # check for Werror
-EXTRA_CFLAGS=""
+EXTRA_CFLAGS="-Wall"
 AC_ARG_ENABLE(Werror,
         AC_HELP_STRING([--disable-Werror], [don't use gcc's -Werror option when building]))
 
